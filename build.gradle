@@ -41,6 +41,10 @@ sourceSets {
     }
 }
 
+application {
+    mainClassName = 'dfa.DFA'
+}
+
 compileJava {
     options.incremental = true
     options.fork = true
