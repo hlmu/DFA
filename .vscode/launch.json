@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Generator",
+            "request": "launch",
+            "mainClass": "generate.Generator",
+            "projectName": "FSM"
+        }
+    ]
+}
