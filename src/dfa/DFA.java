@@ -1,4 +1,4 @@
-package generate;
+package dfa;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -13,7 +13,7 @@ import org.jgrapht.graph.*;
 import org.jgrapht.io.*;
 import org.jgrapht.traverse.*;
 
-public class Generator {
+public class DFA {
     public static final double EPS = 1e-6;
     Graph<Integer, DefaultWeightedEdge> fsmGraph = new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
     ComponentNameProvider<Integer> vertexIdProvider;
@@ -24,6 +24,12 @@ public class Generator {
     int depth = 0;
     int cnt = 0;
 
+    /**
+     * Determin the sign of x-y
+     * @param x 
+     * @param y
+     * @return a negative integer if x-y < 0, zero if x-y=0, and positive integer if x-y>0
+     */
     public static int sgn(double x, double y) {
         if (Math.abs(x - y) < EPS)
             return 0;
@@ -33,7 +39,11 @@ public class Generator {
             return 1;
     }
 
-    Generator(int depth) {
+    /**
+     * Build a dfa
+     * @param depth depth of dfa, or last n value in the given problem in other words
+     */
+    DFA(int depth) {
         this.depth = depth;
         this.cnt = (1 << (depth + 1)) - 1;
         int sum = (1 << depth) - 1; // sum of all nodes excluding the deepest level
@@ -117,6 +127,10 @@ public class Generator {
         }
     }
 
+    /**
+     * Export to dot file
+     * @param fileName file name
+     */
     public void exportToDot(String fileName) throws ExportException, IOException {
         GraphExporter<Integer, DefaultWeightedEdge> exporter = new DOTExporter<>(vertexIdProvider, vertexLabelProvider,
                 edgeLabelProvider, vertexAttrProvider, null);
@@ -127,8 +141,17 @@ public class Generator {
         bf.close();
     }
 
+
+    /**
+     * Check if str is accepted by this DFA
+     * @return true if accepted, false if not
+     */
+    public boolean accept(String str) {
+        return false;
+    }
+
     public static void main(String[] args) throws ExportException, IOException {
-        Generator generator = new Generator(10);
+        DFA generator = new DFA(10);
         generator.exportToDot("fsm.gv");
     }
 }
