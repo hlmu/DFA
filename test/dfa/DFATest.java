@@ -14,11 +14,11 @@ public class DFATest {
     @Test
     public void testSmall() {
         dfa = new DFA(10);
-        for(int i = 0; i < (1<<16); i++) {
+        for(int i = (1<<10); i < (1<<16); i++) {
             if((i&((1<<10)-1)) != 0) 
-                assertTrue(dfa.accept(String.valueOf(i)));
+                assertTrue(dfa.accept(Integer.toBinaryString(i)),"Fails at:" + Integer.toBinaryString(i));
             else 
-                assertFalse(dfa.accept(String.valueOf(i)));
+                assertFalse(dfa.accept(Integer.toBinaryString(i)),"Fails at:" + Integer.toBinaryString(i));
         }
     }
     @Test

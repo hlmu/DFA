@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - DFA",
+            "request": "launch",
+            "mainClass": "dfa.DFA",
+            "projectName": "FSM"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Generator",
             "request": "launch",
             "mainClass": "generate.Generator",

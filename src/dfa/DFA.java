@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
@@ -39,6 +41,30 @@ public class DFA {
             return 1;
     }
 
+    // check if state val is final state
+    private boolean isFinalState(int val) {
+        int sum = (1 << depth) - 1; // sum of all nodes excluding the deepest level
+        if(val < sum) {
+            // nodes on the upper level
+            // this means the given length of string is less than n
+            if(((val+1) & (-(val+1))) == (val+1)) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            // nodes on the deepest level
+            if(((val-sum)&((1<<depth)-1)) != 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
     /**
      * Build a dfa
      * @param depth depth of dfa, or last n value in the given problem in other words
@@ -66,22 +92,13 @@ public class DFA {
                 if(val == Integer.MAX_VALUE) {
                     result.put("shape", DefaultAttribute.createAttribute("point"));
                 }
-                else if(val < sum) {
-                    if((val&((1<<depth)-1)) != 0) {
-                        result.put("shape", DefaultAttribute.createAttribute("doublecircle"));
-                    }
-                    else {
-                        result.put("shape", DefaultAttribute.createAttribute("circle"));
-                    }
-                }
                 else {
-                    if(((val-sum)&((1<<depth)-1)) != 0) {
+                    if(isFinalState(val))
                         result.put("shape", DefaultAttribute.createAttribute("doublecircle"));
-                    }
-                    else {
+                    else 
                         result.put("shape", DefaultAttribute.createAttribute("circle"));
-                    }
                 }
+                
                 return result;
             }
         };
@@ -141,17 +158,33 @@ public class DFA {
         bf.close();
     }
 
+    private List<DefaultWeightedEdge> getAllEdgesFromNode(Graph<Integer, DefaultWeightedEdge> graph, Integer startNode) {
+        return graph.edgeSet().stream()
+            .filter(weightedEdge -> graph.getEdgeSource(weightedEdge).equals(startNode))
+            .collect(Collectors.toList());
+    }
 
     /**
      * Check if str is accepted by this DFA
      * @return true if accepted, false if not
      */
     public boolean accept(String str) {
-        return false;
+        Integer current = 0;
+        for(int i = 0; i < str.length(); i++) {
+            for(DefaultWeightedEdge e : getAllEdgesFromNode(fsmGraph, current)) {
+                double weight = fsmGraph.getEdgeWeight(e);
+                if(sgn(weight, str.charAt(i) - '0') == 0) {
+                    current = fsmGraph.getEdgeTarget(e);
+                    break;
+                }
+            }
+        }
+        if(isFinalState(current)) return true;
+        else return false;
     }
 
     public static void main(String[] args) throws ExportException, IOException {
-        DFA generator = new DFA(10);
-        generator.exportToDot("fsm.gv");
+        DFA generator = new DFA(2);
+        generator.exportToDot("DFA-2.dot");
     }
 }
