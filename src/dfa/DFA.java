@@ -183,7 +183,7 @@ public class DFA {
     }
 
     public static void main(String[] args) throws ExportException, IOException {
-        DFA generator = new DFA(2);
-        generator.exportToDot("DFA-2.dot");
+        DFA generator = new DFA(10);
+        generator.exportToDot("DFA-10.dot");
     }
 }
