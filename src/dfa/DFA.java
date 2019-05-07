@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
 import org.jgrapht.io.*;
-import org.jgrapht.traverse.*;
 
 public class DFA {
     public static final double EPS = 1e-6;
